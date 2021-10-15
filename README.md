@@ -70,6 +70,24 @@ cdk deploy
 
 ## API GatewayとLamda
 
+横道。
+
 [こちら](https://awsjp.com/AWS/hikaku/API_Gateway-Lambda-chigai.html)を参考にさせていただいた。
 
 あー、Lamda がそのままREST APIのエンドポイントとしては使えないから、API Gateway経由で呼ぶってことね。
+# 戻る
+
+ということでlambdaはそのまま使えないので、API Gatewayを定義する。
+
+
+```ts
+// 割愛
+import * as apigw from '@aws-cdk/aws-apigateway';
+// 割愛
+    new apigw.LambdaRestApi(this, 'Endpoint', {
+      handler: hello
+    })
+```
+
+デプロイするとエンドポイントが表示されてcurlで確認できた。
+
