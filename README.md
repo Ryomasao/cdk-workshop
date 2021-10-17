@@ -91,3 +91,6 @@ import * as apigw from '@aws-cdk/aws-apigateway';
 
 デプロイするとエンドポイントが表示されてcurlで確認できた。
 
+
+
+
