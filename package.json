@@ -27,6 +27,7 @@
     "@aws-cdk/aws-sns": "1.127.0",
     "@aws-cdk/aws-sns-subscriptions": "1.127.0",
     "@aws-cdk/aws-sqs": "1.127.0",
-    "@aws-cdk/core": "1.127.0"
+    "@aws-cdk/core": "1.127.0",
+    "cdk-dynamo-table-viewer": "^0.1.119"
   }
 }
