@@ -101,6 +101,12 @@ import * as apigw from '@aws-cdk/aws-apigateway';
 あとかたづけ
 
 ```
+cdk destroy
+```
+# Pipeline
+
+```
+npx cdk bootstrap --cloudformation-execution-policies arn:aws:iam::aws:policy/AdministratorAccess
 ```
 
 
