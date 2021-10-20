@@ -28,7 +28,8 @@ export class WorkshopPipelineStack extends cdk.Stack {
             sourceAction: new codepipeline_actions.CodeCommitSourceAction({
                 actionName: 'CodeCommit', // Any Git-based source control
                 output: sourceArtifact, // Indicates where the artifact is stored
-                repository: repo // Designates the repo to draw code from
+                repository: repo, // Designates the repo to draw code from,
+                branch: 'main'
             }),
         
             // Builds our source code outlined above into a could assembly artifact
