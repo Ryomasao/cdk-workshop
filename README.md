@@ -105,9 +105,25 @@ cdk destroy
 ```
 # Pipeline
 
+やったことはこのcommit参照。
+`cb70f26cd736c54153bef9759459d2bdc9c55846`
+
+CDKがpipelineを利用できるように、adminのポリシーをcdkにアタッチしてるのかな
+
 ```
 npx cdk bootstrap --cloudformation-execution-policies arn:aws:iam::aws:policy/AdministratorAccess
 ```
+
+デプロイに、AWS CodeCommitを利用するので、IAMでCodeCommit用の認証情報を作成しておく。
+リポジトリができてるので、このリポジトリをCodeCommitのremoteと紐付けておく。
+
+```sh
+git remote add codecommit codecommitのリーモトリポジトリのURL
+# usernameとpasswordが聞かれるのでさきほど作成した認証情報の値を入力
+git push codecommit main
+```
+
+
 
 
 
