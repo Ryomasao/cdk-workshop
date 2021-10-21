@@ -103,12 +103,18 @@ import * as apigw from '@aws-cdk/aws-apigateway';
 ```
 cdk destroy
 ```
-# Pipeline
+# CodePipeline
 
 やったことはこのcommit参照。
 `cb70f26cd736c54153bef9759459d2bdc9c55846`
 
 CDKがpipelineを利用できるように、adminのポリシーをcdkにアタッチしてるのかな
+
+code pipelineについては[この図](https://docs.aws.amazon.com/ja_jp/codepipeline/latest/userguide/welcome-introducing.html)がシンプルでイメージしやすかった。
+用語については、[ここ](https://docs.aws.amazon.com/ja_jp/codepipeline/latest/userguide/concepts.html)
+
+よく出てくるのは、Stage/Actions/Artifactsあたり。  
+Jenkinsと似たように、Stageの中にいくつかのActionsがあるって感じ。Artifactsはピンときてないけどソースコードやファイル、アプリケーションとかざっくりとしたデータの集合を表す用語。  
 
 ```
 npx cdk bootstrap --cloudformation-execution-policies arn:aws:iam::aws:policy/AdministratorAccess
@@ -124,7 +130,63 @@ git push codecommit main
 ```
 
 
+# CodePipelineを通してcdkのスタックをデプロイする
+
+むむ。ちょっとよくわからなくなってきたやつ。  
+今ままでは、`cdk deploy`することでインフラ/アプリケーションコードをデプロイしてきた。  
+Pipelineを利用することで、リポジトリに変更があった場合、自動的にPipelineが`cdk deploy`を実行してくれる流れになるんだと思う。  
+
+初回はpipelineそのものを構築するためにpipeline定義をして`cdk deploy`して、以降はpipelineから実行みたいなかんじかしら。
+
+このへんのcommitでpipeline stageを追加してる。  
+`28ed3336ce40e24eaf96288dc0ba1cae771f536a`
+
+チュートリアルで作成したpipelineをAWSのconsoleでみてみると以下のステージで構成されていることが確認できる。  
+
+基本は、Source/Build/Deployの3ステージから構成されるって思っておけばよさげ。
+
+- Source
+- Build
+- UpdatePipeline
+- Assets
+- Deploy
+
+## Source
+
+AWS CodeCommitからソースコードを取得してくるだけ。
+対象のブランチとかって、どこで指定するんだろう。  
+→ ステージの編集からアクションを編集できて、その中にブランチもあった。
+→ inputとなるリポジトリの設定もある。
+→ 出力Artifactなる設定があって、次のStageにわたす成果物もここでしてた。
+
+## Build
+
+SourceStageで出力したartifactをinputにしてソースをビルドして、新たなartifactを生成する。
+
+ビルドは、AWS CodeBuildがまた別でいて、Buildステージでは、AWS CodeBuild側で利用するプロジェクトを選択する流れになる。  
+
+## UpdatePipeline
+
+pipelineがpipeline/インフラをアップデートしてる。  
+やってる内容は、`cdk deploy`
 
 
+## Assets
+
+これがいまいちわからない。  
+
+[こちらの記事](https://dev.classmethod.jp/articles/aws-cdk-unit-test-ignore-assets/)や公式docを参照するに、cdkのアプリケーションにバンドルするファイルっぽい。  
+
+## Deploy
+
+CloudFormationを呼び出してる。  
+こっから先はCloudFormationがわかってないと理解できないかも。
+
+
+これでCloudFormationのテンプレートが生成されるので、別の機会にCloudFormationだけでためしてみよう。
+
+```
+ckd synth
+```
 
 
