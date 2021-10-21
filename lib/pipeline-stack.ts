@@ -2,6 +2,7 @@ import * as cdk from '@aws-cdk/core';
 import * as codecommit from '@aws-cdk/aws-codecommit';
 import * as codepipeline from '@aws-cdk/aws-codepipeline';
 import * as codepipeline_actions from '@aws-cdk/aws-codepipeline-actions';
+import { WorkshopPipelineStage } from './pipeline-stage';
 import { SimpleSynthAction, CdkPipeline } from "@aws-cdk/pipelines";
 
 export class WorkshopPipelineStack extends cdk.Stack {
@@ -40,5 +41,7 @@ export class WorkshopPipelineStack extends cdk.Stack {
                 buildCommand: 'npm run build' // Language-specific build cmd
             })
         })
+        const deploy = new WorkshopPipelineStage(this, 'Deploy');
+        pipeline.addApplicationStage(deploy);
     }
 }
